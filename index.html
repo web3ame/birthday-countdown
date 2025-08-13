@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Birthday Gift – iPhone 17 Pro Countdown</title>
+<meta name="description" content="Happy Birthday! iPhone 17 Pro をプレゼント。発売日までのカウントダウン。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Inter:wght@700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0b1220;
+    --card:#ffffff;
+    --muted:#64748b;
+    --accent:#111827;
+    --shadow:0 20px 60px rgba(0,0,0,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(1200px 800px at 20% -10%, #1f2937 0%, #0b1020 60%, #060913 100%);
+    font-family:"Noto Sans JP", system-ui, -apple-system, "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
+    color:#fff; overflow:hidden;
+  }
+  .screen{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:24px}
+  .hidden{opacity:0; pointer-events:none; transform:scale(.98); transition:opacity .45s ease, transform .45s ease}
+  .visible{opacity:1; pointer-events:auto; transform:scale(1); transition:opacity .45s ease, transform .45s ease}
+
+  /* ---------- Screen 1 : Gift ---------- */
+  .gift-wrap{ text-align:center; }
+  .bd-msg{
+    font-family:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-weight:900; letter-spacing:.04em;
+    font-size:clamp(28px,7vw,56px);
+    margin:0 0 12px;
+    background: linear-gradient(90deg, #fde68a, #fca5a5, #93c5fd, #86efac);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: hue 6s linear infinite;
+  }
+  @keyframes hue { from{filter:hue-rotate(0deg)} to{filter:hue-rotate(360deg)} }
+
+  .gift{
+    width:min(280px, 50vw); aspect-ratio:1/1;
+    margin: 16px auto 10px;
+    filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
+    cursor:pointer;
+    transition: transform .25s ease;
+  }
+  .gift:hover{ transform: translateY(-4px) scale(1.02); }
+  .hint{
+    margin-top:10px; color:#c7d2fe; font-size:14px; opacity:.9;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.5; transform:translateY(0)} 50%{opacity:1; transform:translateY(-2px)} }
+
+  /* ---------- Screen 2 : Message + confetti ---------- */
+  .card{
+    width:min(720px, 92vw);
+    background:var(--card);
+    color:var(--ink);
+    border-radius:20px; padding:28px 24px; box-shadow:var(--shadow);
+    text-align:center;
+  }
+  .card h2{ margin:0 0 8px; font-size:clamp(22px,4.2vw,28px); font-weight:900; letter-spacing:.02em }
+  .card p{ margin:0 0 18px; color:var(--muted) }
+  .btn{
+    appearance:none; border:0; cursor:pointer;
+    background:var(--accent); color:#fff; padding:12px 18px; border-radius:12px;
+    font-weight:800; font-size:16px; letter-spacing:.04em;
+  }
+
+  .confetti {position:absolute; inset:0; overflow:hidden; pointer-events:none}
+  .confetti i{
+    position:absolute; top:-10px; width:10px; height:14px; opacity:.9;
+    animation: fall 4.5s linear infinite;
+  }
+  .confetti i:nth-child(3n){ background:#f59e0b }
+  .confetti i:nth-child(3n+1){ background:#60a5fa }
+  .confetti i:nth-child(3n+2){ background:#ec4899 }
+  .confetti i:nth-child(5n){ width:8px; height:12px; transform:rotate(15deg) }
+  @keyframes fall {
+    0%{ transform: translateY(-10vh) rotate(0deg) }
+    100%{ transform: translateY(110vh) rotate(720deg) }
+  }
+
+  /* ---------- Screen 3 : Countdown ---------- */
+  .title{
+    font-size:clamp(18px, 3vw, 22px);
+    letter-spacing:.06em; margin:0 0 10px; font-weight:900;
+  }
+  .timer{ display:flex; gap:12px; justify-content:center; margin:8px 0 8px; flex-wrap:wrap }
+  .unit{ min-width:108px; padding:14px 12px; border-radius:14px; border:1px solid #e5e7eb; background:#fff; color:#0f172a }
+  .num{ font-size:clamp(34px, 8vw, 48px); font-weight:900; line-height:1.05; letter-spacing:.02em }
+  .label{ margin-top:4px; color:#475569; font-size:13px; letter-spacing:.12em; text-align:center }
+  .subtitle{ margin:10px 0 0; color:#cbd5e1; font-size:14px; text-align:center }
+  .shell{ width:min(760px, 94vw); margin: 0 auto; background: #0c1224aa; backdrop-filter: blur(6px); border:1px solid #1f2a44; border-radius:20px; padding:26px 20px; box-shadow: var(--shadow); text-align:center }
+
+  /* ---------- Transition overlays ---------- */
+  .overlay{ position:absolute; inset:0; pointer-events:none; display:none; }
+  .overlay.active{ display:block; }
+
+  /* Radial wipe for first transition */
+  .wipe{
+    position:absolute; inset:0;
+    background: radial-gradient(120px 120px at var(--x,50%) var(--y,50%), rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.92) 18%, rgba(255,255,255,0.0) 22%) no-repeat;
+    mix-blend-mode:screen;
+    transform: scale(0);
+    opacity:0;
+  }
+  .wipe.play{
+    animation: wipeZoom .9s ease-out forwards;
+  }
+  @keyframes wipeZoom {
+    0%{ transform: scale(0.2); opacity:0 }
+    30%{ transform: scale(1); opacity:1 }
+    100%{ transform: scale(12); opacity:0 }
+  }
+
+  /* Sparkles during transition */
+  .sparkles{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+  .sparkles i{
+    position:absolute; width:6px; height:6px; border-radius:50%;
+    background: radial-gradient(circle, #fff, rgba(255,255,255,.1));
+    box-shadow:0 0 12px rgba(255,255,255,.9);
+    animation: fly 1s ease-out forwards;
+  }
+  @keyframes fly {
+    0%{ transform: translate(0,0) scale(.6); opacity:1 }
+    100%{ transform: translate(var(--dx), var(--dy)) scale(0); opacity:0 }
+  }
+
+  /* Slide / glow for second transition */
+  .slideFade{ position:absolute; inset:0; background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,0)); opacity:0 }
+  .slideFade.play{ animation: slideGlow .7s ease-out forwards }
+  @keyframes slideGlow{
+    0%{ transform: translateX(-10%); opacity:0 }
+    30%{ opacity:1 }
+    100%{ transform: translateX(100%); opacity:0 }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce){
+    .bd-msg{ animation:none }
+    .gift:hover{ transform:none }
+    .confetti i{ animation-duration:2s }
+    .wipe.play, .slideFade.play{ animation-duration:.01s }
+    .sparkles i{ animation-duration:.01s }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== Screen 1: Gift box & "Happy Birthday!" ========== -->
+<section id="s1" class="screen visible" aria-label="Happy Birthday screen">
+  <div class="gift-wrap">
+    <h1 class="bd-msg" aria-live="polite">Happy Birthday!</h1>
+    <!-- Inline SVG gift box -->
+    <svg class="gift" id="giftBtn" viewBox="0 0 200 200" role="img" aria-label="Gift box, click to open">
+      <defs>
+        <linearGradient id="lid" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/>
+        </linearGradient>
+        <linearGradient id="box" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#93c5fd"/><stop offset="1" stop-color="#3b82f6"/>
+        </linearGradient>
+        <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#fb7185"/><stop offset="1" stop-color="#ec4899"/>
+        </linearGradient>
+      </defs>
+      <!-- box -->
+      <rect x="30" y="80" width="140" height="100" rx="10" fill="url(#box)"/>
+      <!-- lid -->
+      <rect x="20" y="60" width="160" height="32" rx="8" fill="url(#lid)">
+        <animate attributeName="y" values="60;56;60" dur="2s" repeatCount="indefinite" />
+      </rect>
+      <!-- ribbons -->
+      <rect x="95" y="60" width="10" height="120" fill="url(#ribbon)"/>
+      <rect x="20" y="100" width="160" height="10" fill="url(#ribbon)"/>
+      <!-- bow -->
+      <circle cx="95" cy="55" r="10" fill="#ec4899"/>
+      <circle cx="105" cy="55" r="10" fill="#fb7185"/>
+    </svg>
+    <div class="hint">Click the gift 🎁</div>
+  </div>
+</section>
+
+<!-- Transition 1 overlay (radial wipe + sparkles) -->
+<div id="t1" class="overlay" aria-hidden="true">
+  <div class="wipe" id="wipe"></div>
+  <div class="sparkles" id="sparkles"></div>
+</div>
+
+<!-- ========== Screen 2: Message & "開く" button with confetti ========== -->
+<section id="s2" class="screen hidden" aria-label="Gift message screen">
+  <div class="confetti" aria-hidden="true"></div>
+  <div class="card" role="dialog" aria-labelledby="gift-msg-title" aria-modal="true">
+    <h2 id="gift-msg-title">サプライズ！🎉</h2>
+    <p>あなたに <strong>iPhone 17 Pro</strong> をプレゼントします。<br>次の画面で発売日までのカウントダウンが始まります。</p>
+    <button class="btn" id="openBtn">開く</button>
+  </div>
+</section>
+
+<!-- Transition 2 overlay (slide glow) -->
+<div id="t2" class="overlay" aria-hidden="true">
+  <div class="slideFade" id="slideFade"></div>
+</div>
+
+<!-- ========== Screen 3: Countdown (JST) ========== -->
+<section id="s3" class="screen hidden" aria-label="Countdown screen">
+  <div class="shell">
+    <div class="title">お届けまであと</div>
+    <div class="timer" id="timer">
+      <div class="unit"><div class="num" id="days">--</div><div class="label">日</div></div>
+      <div class="unit"><div class="num" id="hours">--</div><div class="label">時間</div></div>
+      <div class="unit"><div class="num" id="minutes">--</div><div class="label">分</div></div>
+      <div class="unit"><div class="num" id="seconds">--</div><div class="label">秒</div></div>
+    </div>
+    <div class="subtitle">発売日：2025年9月19日（日本時間）</div>
+  </div>
+</section>
+
+<script>
+  // ===== Small helpers =====
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => document.querySelectorAll(sel);
+  function show(el){ [$('#s1'),$('#s2'),$('#s3')].forEach(x => x.className='screen hidden'); el.className='screen visible'; }
+  function vibrate(ms){ if(navigator.vibrate) try{ navigator.vibrate(ms) }catch(e){} }
+
+  // ===== Screen elements =====
+  const giftBtn = $('#giftBtn');
+  const openBtn = $('#openBtn');
+
+  // ===== Transition 1 (S1 -> S2): Radial wipe + sparkles, slight haptics =====
+  const t1 = $('#t1'), wipe = $('#wipe'), sparkles = $('#sparkles');
+  giftBtn.addEventListener('click', (e) => {
+    const r = giftBtn.getBoundingClientRect();
+    const cx = r.left + r.width/2;
+    const cy = r.top + r.height/2;
+    // Place wipe center at click/gift center
+    wipe.style.setProperty('--x', cx + 'px');
+    wipe.style.setProperty('--y', cy + 'px');
+    t1.classList.add('active');
+    wipe.classList.add('play');
+    spawnSparkles(cx, cy, 42);
+    vibrate(25);
+    // After animation, move to screen 2
+    setTimeout(() => {
+      t1.classList.remove('active');
+      wipe.classList.remove('play');
+      sparkles.innerHTML='';
+      show($('#s2'));
+      // Confetti burst for a moment
+      spawnConfetti();
+      setTimeout(stopConfetti, 1800);
+    }, 950);
+  });
+
+  function spawnSparkles(x, y, n){
+    const vw = window.innerWidth, vh = window.innerHeight;
+    for(let i=0;i<n;i++){
+      const s = document.createElement('i');
+      const angle = Math.random()*Math.PI*2;
+      const dist = 80 + Math.random()*140;
+      s.style.left = (x - 3) + 'px';
+      s.style.top  = (y - 3) + 'px';
+      s.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
+      s.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
+      sparkles.appendChild(s);
+      setTimeout(()=> s.remove(), 1000);
+    }
+  }
+
+  // ===== Confetti (for S2) =====
+  const confettiWrap = $('.confetti');
+  let confettiTimer = null;
+  function spawnConfetti(){
+    if(!confettiWrap) return;
+    for(let i=0;i<70;i++){
+      const piece = document.createElement('i');
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.animationDelay = (Math.random()*2) + 's';
+      piece.style.animationDuration = (3.2 + Math.random()*2) + 's';
+      confettiWrap.appendChild(piece);
+    }
+    confettiTimer = setInterval(() => {
+      const piece = document.createElement('i');
+      piece.style.left = Math.random()*100 + 'vw';
+      piece.style.animationDelay = '0s';
+      piece.style.animationDuration = (3 + Math.random()*2) + 's';
+      confettiWrap.appendChild(piece);
+      if(confettiWrap.children.length > 160) confettiWrap.removeChild(confettiWrap.firstChild);
+    }, 120);
+  }
+  function stopConfetti(){
+    if(confettiTimer){ clearInterval(confettiTimer); confettiTimer = null; }
+  }
+
+  // ===== Transition 2 (S2 -> S3): Slide glow, slight haptics =====
+  const t2 = $('#t2'), slideFade = $('#slideFade');
+  openBtn.addEventListener('click', () => {
+    t2.classList.add('active');
+    slideFade.classList.add('play');
+    vibrate(15);
+    setTimeout(() => {
+      t2.classList.remove('active');
+      slideFade.classList.remove('play');
+      show($('#s3'));
+      // subtle emphasis on first digits
+      $('.shell').animate ? $('.shell').animate([{transform:'scale(.98)'},{transform:'scale(1)'}], {duration:220, easing:'ease-out'}) : null;
+    }, 720);
+  });
+
+  // ===== Countdown (JST) =====
+  const TARGET_ISO = "2025-09-19T00:00:00+09:00"; // 日本時間の発売日時
+  function parts(ms){
+    if(ms <= 0) return {d:0,h:0,m:0,s:0,done:true};
+    const sec = Math.floor(ms/1000);
+    return {
+      d: Math.floor(sec/86400),
+      h: Math.floor((sec%86400)/3600),
+      m: Math.floor((sec%3600)/60),
+      s: sec%60,
+      done:false
+    };
+  }
+  function update(){
+    const target = new Date(TARGET_ISO);
+    const now = new Date();
+    const t = target - now;
+    const p = parts(t);
+    document.getElementById('days').textContent = p.d;
+    document.getElementById('hours').textContent = String(p.h).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(p.m).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(p.s).padStart(2,'0');
+    if(p.done){
+      document.querySelector('.title').textContent = '本日お届け！';
+    }
+  }
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>
